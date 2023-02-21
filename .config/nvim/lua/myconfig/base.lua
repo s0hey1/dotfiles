@@ -18,6 +18,7 @@ vim.cmd([[au TermClose * call feedkeys("i")]])
 --fast change dir
 vim.cmd([[command CDC cd %:p:h]])
 
+
 vim.wo.number = true
 vim.wo.relativenumber = true
 vim.g.mapleader = " " -- map leader to space
@@ -33,7 +34,7 @@ vim.opt.cmdheight = 1
 vim.opt.laststatus = 2
 vim.opt.expandtab = true
 vim.opt.scrolloff = 10
-vim.opt.shell = 'fish'
+vim.opt.shell = 'zsh'
 vim.opt.backupskip = { '/tmp/*', '/private/tmp/*' }
 vim.opt.inccommand = 'split'
 vim.opt.ignorecase = true -- Case insensitive searching UNLESS /C or capital in search

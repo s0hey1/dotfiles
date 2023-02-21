@@ -35,3 +35,26 @@ keymap.set('n', 'dw', 'vb"_d')
 --
 --fast change directory
 keymap.set('n', '<leader>cd', ':cd %p:h<CR>:pwd<CR>', { noremap = true, silent = true })
+
+vim.cmd([[
+fun! ConfirmQuit(writeFile)
+    if (a:writeFile)
+        if expand('%') == ''
+            echohl ErrorMsg | echomsg 'E32: No file name' | echohl None
+            return
+        endif
+        write
+    endif
+
+    let l:confirmed = confirm('Do you really want to quit?', "&Yes\n&No", 2)
+    if l:confirmed == 1
+        quit
+    endif
+endfun
+
+cnoremap <silent> q<CR>  :call ConfirmQuit(0)<CR>
+cnoremap <silent> wq<CR> :call ConfirmQuit(1)<CR>
+cnoremap <silent> x<CR>  :call ConfirmQuit(1)<CR>
+nnoremap <silent> ZZ     :call ConfirmQuit(1)<CR>
+
+]])
