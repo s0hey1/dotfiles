@@ -1,8 +1,17 @@
 local status, lspsaga = pcall(require, "lspsaga")
 if (not status) then return end
 
-lspsaga.init_lsp_saga {
+-- lspsaga.setup()
+lspsaga.setup {
     symbol_in_winbar = {
+        enable = true,
+        separator = " ",
+        ignore_patterns = {},
+        hide_keyword = true,
+        show_file = true,
+        folder_level = 2,
+        respect_root = false,
+        color_mode = true,
         in_custom = true,
         click_support = function(node, clicks, button, modifiers)
             -- To see all avaiable details: vim.pretty_print(node)
@@ -17,7 +26,7 @@ lspsaga.init_lsp_saga {
             elseif button == "r" then
                 if modifiers == "s" then
                     print "lspsaga" -- shift right click to print "lspsaga"
-                end -- jump to node's ending line+char
+                end                 -- jump to node's ending line+char
                 vim.fn.cursor(en.line + 1, en.character + 1)
             elseif button == "m" then
                 -- middle click to visual select node
@@ -80,22 +89,23 @@ end
 
 local function config_winbar_or_statusline()
     local exclude = {
-        ['terminal'] = true,
-        ['toggleterm'] = true,
-        ['prompt'] = true,
-        ['NvimTree'] = true,
-        ['help'] = true,
+            ['terminal'] = true,
+            ['toggleterm'] = true,
+            ['prompt'] = true,
+            ['NvimTree'] = true,
+            ['help'] = true,
     } -- Ignore float windows and exclude filetype
     if vim.api.nvim_win_get_config(0).zindex or exclude[vim.bo.filetype] then
         vim.wo.winbar = ''
     else
-        local ok, lspsaga = pcall(require, 'lspsaga.symbolwinbar')
-        local sym
-        if ok then sym = lspsaga.get_symbol_node() end
-        local win_val = ''
-        win_val = get_file_name(true) -- set to true to include path
-        if sym ~= nil then win_val = win_val .. sym end
-        vim.wo.winbar = win_val
+        -- local ok, lspsaga = pcall(require, 'lspsaga.symbolwinbar')
+        -- local sym
+        -- if ok then sym = lspsaga.get_symbol_node() end
+        -- local win_val = ''
+        -- win_val = get_file_name(true) -- set to true to include path
+        -- if sym ~= nil then win_val = win_val .. sym end
+        -- vim.wo.winbar = win_val
+        --
         -- if work in statusline
         --vim.wo.stl = win_val
     end

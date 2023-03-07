@@ -6,6 +6,7 @@ local lspsaga_status, _ = pcall(require, "lspsaga")
 
 local protocol = require('vim.lsp.protocol')
 
+
 protocol.CompletionItemKind = {
     '', -- Text
     '', -- Method
@@ -57,11 +58,11 @@ end
 
 vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
     vim.lsp.diagnostic.on_publish_diagnostics, {
-    underline = true,
-    update_in_insert = false,
-    virtual_text = { spacing = 4, prefix = "●" },
-    severity_sort = true,
-}
+        underline = true,
+        update_in_insert = false,
+        virtual_text = { spacing = 4, prefix = "●" },
+        severity_sort = true,
+    }
 )
 
 -- Diagnostic symbols in the sign column (gutter)
@@ -94,7 +95,6 @@ vim.keymap.set('n', ']d', vim.diagnostic.goto_next, opts)
 vim.keymap.set('n', '<space>q', vim.diagnostic.setloclist, opts)
 
 local on_attach = function(client, bufnr)
-
     --Enable completion triggered by <c-x><c-o>
     vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
 
@@ -139,7 +139,6 @@ end
 MyConfig.lsp.default_on_attach_handler = on_attach
 
 MyConfig.lsp.setup_handlers = {
-
     function(server_name)
         lspconfig[server_name].setup {
             on_attach = on_attach,
@@ -149,8 +148,7 @@ MyConfig.lsp.setup_handlers = {
             }
         }
     end,
-
-    ['tsserver'] = function()
+        ['tsserver'] = function()
         lspconfig.tsserver.setup {
             on_attach = on_attach,
             filetypes = { "typescript", "typescriptreact", "typescript.tsx" },
@@ -161,8 +159,8 @@ MyConfig.lsp.setup_handlers = {
             }
         }
     end,
-    ['sumneko_lua'] = function()
-        lspconfig.sumneko_lua.setup {
+        ['lua_ls'] = function()
+        lspconfig.lua_ls.setup {
             capabilities = MyConfig.lsp.capabilities,
             on_attach = function(client, bufnr)
                 on_attach(client, bufnr)
@@ -174,7 +172,6 @@ MyConfig.lsp.setup_handlers = {
                         -- Get the language server to recognize the `vim` global
                         globals = { 'vim' },
                     },
-
                     workspace = {
                         -- Make the server aware of Neovim runtime files
                         library = vim.api.nvim_get_runtime_file("", true),
@@ -187,7 +184,7 @@ MyConfig.lsp.setup_handlers = {
             }
         }
     end,
-    ['clangd'] = function()
+        ['clangd'] = function()
         -- clang_format for format with indent 4 put "IndentWidth: 4" into ~/.clang-format
         local capabilities = vim.deepcopy(MyConfig.lsp.capabilities)
         capabilities.offsetEncoding = { 'utf-16' }
@@ -203,7 +200,26 @@ MyConfig.lsp.setup_handlers = {
             }
         }
     end,
-
-    ['rust_analyzer'] = function() end
-
+        ['rust_analyzer'] = function()
+    end,
+        ['vls'] = function()
+        -- print(vim.inspect(vim.lsp.protocol.make_client_capabilities()))
+        -- local capabilities = vim.deepcopy(MyConfig.lsp.capabilities)
+        -- -- local capabilities = vim.lsp.protocol.make_client_capabilities();
+        -- print(vim.inspect(capabilities))
+        -- capabilities.textDocument.documentSymbol = nil
+        -- capabilities.textDocument.signatureHelp = nil
+        lspconfig.vls.setup {
+            cmd = { "vls" },
+            filetypes = { "vlang", "v" },
+            -- on_attach = on_attach,
+            on_attach = function(client, bufnr)
+                -- print(vim.inspect(client.server_capabilities))
+                client.server_capabilities.documentSymbolProvider = false
+                client.server_capabilities.signatureHelpProvider = nil
+                on_attach(client, bufnr)
+            end,
+            capabilities = MyConfig.lsp.capabilities,
+        }
+    end,
 }
