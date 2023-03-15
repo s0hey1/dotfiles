@@ -79,8 +79,9 @@ return {
   "nvim-lualine/lualine.nvim",
   opts = function(_, opts)
     options = {
-      component_separators = { left = "", right = "" },
-      section_separators = { left = "", right = "" },
+      -- component_separators = { left = "", right = "" },
+      -- section_separators = { left = "", right = "" },
+      -- theme = "ayu-mirage",
     }
     -- dont show the winbar for some filetypes
     opts.options.disabled_filetypes.winbar = { "dashboard", "lazy", "alpha" }
